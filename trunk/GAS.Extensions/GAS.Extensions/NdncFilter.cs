@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 
 namespace GAS {
     public class NdncFilter {
-
         private string checkUrl = @"http://ndncregistry.gov.in/ndncregistry/saveSearchSub.misc";
         private string resultRegex = @"(<td.*>)<b>(.*)</b>(</td>)";
 
@@ -18,31 +15,31 @@ namespace GAS {
                 throw new ArgumentException("Invalid phone number", "phoneNumber");
 
 
-            var request = WebRequest.Create(checkUrl);
+            WebRequest request = WebRequest.Create(checkUrl);
             request.Method = "POST";
 
-            var postData = string.Format("phoneno={0}", phoneNumber);
-            var byteArray = Encoding.UTF8.GetBytes(postData);
+            string postData = string.Format("phoneno={0}", phoneNumber);
+            byte[] byteArray = Encoding.UTF8.GetBytes(postData);
             request.ContentType = "application/x-www-form-urlencoded";
             request.ContentLength = byteArray.Length;
 
-            var dataStream = request.GetRequestStream();
+            Stream dataStream = request.GetRequestStream();
             dataStream.Write(byteArray, 0, byteArray.Length);
             dataStream.Close();
 
-            var response = request.GetResponse();
+            WebResponse response = request.GetResponse();
             //Console.WriteLine(((HttpWebResponse)response).StatusDescription);
             dataStream = response.GetResponseStream();
             var reader = new StreamReader(dataStream);
-            var responseFromServer = reader.ReadToEnd();
+            string responseFromServer = reader.ReadToEnd();
 
             reader.Close();
             if (dataStream != null) dataStream.Close();
             response.Close();
 
-            var matches = Regex.Match(responseFromServer, resultRegex, RegexOptions.IgnoreCase);
+            Match matches = Regex.Match(responseFromServer, resultRegex, RegexOptions.IgnoreCase);
             if (matches.Success) {
-                var matchValue = matches.Groups[0].Value;
+                string matchValue = matches.Groups[0].Value;
                 return !matchValue.ToLower().Contains("not");
             }
 

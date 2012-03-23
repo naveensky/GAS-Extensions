@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace System {
+﻿namespace System {
     public static class NumericExtensions {
         public static double ToDouble(this decimal @decimal) {
             return Convert.ToDouble(@decimal);

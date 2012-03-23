@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace System {
+﻿namespace System {
     public static class DateTimeExtensions {
-
         /// <summary>
         /// Return IST time assuming given date is UTC
         /// </summary>
@@ -14,7 +8,5 @@ namespace System {
         public static DateTime ToIst(this DateTime date) {
             return date.AddHours(5).AddMinutes(30);
         }
-
-
     }
 }
